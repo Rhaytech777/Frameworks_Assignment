@@ -1,0 +1,70 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+from wordcloud import WordCloud
+
+# Load cleaned dataset
+df = pd.read_csv("metadata_cleaned.csv")
+
+# BASIC ANALYSIS
+# Count papers by year
+papers_per_year = df["pub_year"].value_counts().sort_index()
+print("Papers per year:")
+print(papers_per_year.head(), "\n")
+
+# Top journals publishing COVID-19 research
+top_journals = df["journal"].value_counts().head(10)
+print("Top Journals:")
+print(top_journals, "\n")
+
+# Most frequent words in titles
+titles = df["title"].dropna().str.lower()
+words = " ".join(titles).split()
+
+word_freq = pd.Series(words).value_counts().head(20)
+print("Most frequent title words:")
+print(word_freq, "\n")
+
+# VISUALIZATIONS
+# 1. Publications over time
+plt.figure()
+papers_per_year.plot()
+plt.title("Number of Publications per Year")
+plt.xlabel("Year")
+plt.ylabel("Number of Papers")
+plt.savefig("papers_per_year.png")
+plt.close()
+
+# 2. Bar chart of top journals
+plt.figure()
+top_journals.plot(kind="bar")
+plt.title("Top 10 Journals Publishing COVID-19 Research")
+plt.xlabel("Journal")
+plt.ylabel("Number of Papers")
+plt.xticks(rotation=90)
+plt.tight_layout()
+plt.savefig("top_journals.png")
+plt.close()
+
+# 3. Word cloud of paper titles
+title_text = " ".join(df["title"].dropna().astype(str))
+
+wc = WordCloud(width=800, height=400, background_color="white").generate(title_text)
+plt.figure(figsize=(10,5))
+plt.imshow(wc, interpolation="bilinear")
+plt.axis("off")
+plt.title("Word Cloud of Paper Titles")
+plt.savefig("title_wordcloud.png")
+plt.close()
+
+# 4. Distribution of paper counts by source (journal)
+plt.figure()
+df["journal"].value_counts().head(20).plot(kind="bar")
+plt.title("Distribution of Papers by Journal (Top 20)")
+plt.xlabel("Journal")
+plt.ylabel("Paper Count")
+plt.xticks(rotation=90)
+plt.tight_layout()
+plt.savefig("journal_distribution.png")
+plt.close()
+
+print("All analysis and visualizations completed successfully!")
