@@ -1,0 +1,32 @@
+import pandas as pd
+
+# load the CSV file with low_memory=False to avoid dtype warnings
+# 1. Load the dataset
+df = pd.read_csv("metadata.csv", low_memory=False)
+print("Dataset loaded successfully!\n")
+
+# 2. Examine first few rows
+print("First 5 rows of the dataset:")
+print(df.head(), "\n")
+
+# 3. Examine data structure
+print("Data information:")
+print(df.info(), "\n")
+
+# 4. Check dataset dimensions
+print("Dataset shape (rows, columns):")
+print(df.shape, "\n")
+
+# 5. Identify data types
+print("Column Data Types:")
+print(df.dtypes, "\n")
+
+# 6. Check missing values in important columns
+important_cols = ["title", "abstract", "publish_time", "journal"]
+print("Missing values in important columns:")
+print(df[important_cols].isnull().sum(), "\n")
+
+# 7. Generate basic statistics for numerical columns
+numeric_df = df.select_dtypes(include="number")
+print("Basic Statistics for Numerical Columns:")
+print(numeric_df.describe())
